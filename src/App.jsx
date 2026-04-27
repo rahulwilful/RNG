@@ -52,9 +52,6 @@ function App() {
   return (
     <div className="container-fluid bg-light text-dark min-vh-100 p-3">
       <div className="d-flex justify-content-center gap-1">
-        <button className="btn btn-sm btn-primary mb-3" onClick={handleGenerate}>
-          Generate
-        </button>
         <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-2  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
           <i class="bi bi-arrow-up"></i> {count1 || 'count1'}
         </button>
@@ -67,6 +64,15 @@ function App() {
         <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-2 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
           <i class="bi bi-arrow-down"></i> {count4 || 'count4'}
         </button>
+      </div>
+      <div className="d-flex gap-2 justify-content-center">
+        <button className="btn btn-sm btn-primary mb-3" onClick={handleGenerate}>
+          Generate
+        </button>
+
+        <div class="input-group input-group-sm mb-3  ">
+          <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" />
+        </div>
       </div>
 
       {/* Unique Numbers */}

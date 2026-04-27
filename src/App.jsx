@@ -96,7 +96,7 @@ function App() {
       <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
         {/* Sorted Numbers */}
         <div className="border">
-          <h4 className="text-center fs-1 fs-sm-4 ">Sorted Numbers</h4>
+          <h4 className="text-center fs-6 fs-sm-4 ">Sorted Numbers</h4>
           <div className="row justify-content-center">
             {sortedNumbers.map((num, index) => {
               const color = getColor(num);
@@ -122,7 +122,7 @@ function App() {
 
         <div className="border">
           {/* Unique Numbers */}
-          <h4 className="text-center fs-1 fs-sm-4">Unique Numbers</h4>
+          <h4 className="text-center fs-6 fs-sm-4">Unique Numbers</h4>
           <div className="row justify-content-center text-light">
             {numbers.map((num, index) => {
               const color = getColor(num);

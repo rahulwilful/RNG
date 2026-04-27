@@ -93,54 +93,60 @@ function App() {
         </div>
       </div>
 
-      {/* Sorted Numbers */}
-      <h4 className="text-center mt-4">Sorted Numbers</h4>
-      <div className="row justify-content-center">
-        {sortedNumbers.map((num, index) => {
-          const color = getColor(num);
+      <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
+        {/* Sorted Numbers */}
+        <div className="border">
+          <h4 className="text-center ">Sorted Numbers</h4>
+          <div className="row justify-content-center">
+            {sortedNumbers.map((num, index) => {
+              const color = getColor(num);
 
-          const isWinning = Number(winningNumber) === num;
+              const isWinning = Number(winningNumber) === num;
 
-          return (
-            <div
-              key={index}
-              className={`col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
-              style={{
-                backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                padding: '10px',
-                fontSize: '18px',
-                color: isWinning ? '#000' : '#fff'
-              }}>
-              {num}
-            </div>
-          );
-        })}
-      </div>
+              return (
+                <div
+                  key={index}
+                  className={`col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                  style={{
+                    backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                    padding: '10px',
+                    fontSize: '18px',
+                    color: isWinning ? '#000' : '#fff'
+                  }}>
+                  {num}
+                </div>
+              );
+            })}
+          </div>
+        </div>
 
-      {/* Unique Numbers */}
-      <h4 className="text-center">Unique Numbers</h4>
-      <div className="row justify-content-center text-light">
-        {numbers.map((num, index) => {
-          const color = getColor(num);
+        <div className="border">
+          {/* Unique Numbers */}
+          <h4 className="text-center">Unique Numbers</h4>
+          <div className="row justify-content-center text-light">
+            {numbers.map((num, index) => {
+              const color = getColor(num);
 
-          // check if this is the winning number
-          const isWinning = Number(winningNumber) === num;
+              // check if this is the winning number
+              const isWinning = Number(winningNumber) === num;
 
-          return (
-            <div
-              key={index}
-              className={`col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
-              style={{
-                // if winning → yellow, else normal roulette color
-                backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                padding: '10px',
-                fontSize: '18px',
-                color: isWinning ? '#000' : '#fff'
-              }}>
-              {num}
-            </div>
-          );
-        })}
+              return (
+                <div
+                  key={index}
+                  className={`col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                  style={{
+                    // if winning → yellow, else normal roulette color
+                    backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                    padding: '10px',
+                    fontSize: '18px',
+                    color: isWinning ? '#000' : '#fff'
+                  }}>
+                  {num}
+                </div>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );

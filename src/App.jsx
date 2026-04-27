@@ -6,6 +6,10 @@ import { RouletteNumbersSorted } from './constants/RouletteNumbers';
 function App() {
   const [numbers, setNumbers] = useState([]);
   const [sortedNumbers, setSortedNumbers] = useState([]);
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
+  const [count3, setCount3] = useState(0);
+  const [count4, setCount4] = useState(0);
 
   const generateRandomNumber = () => {
     const random = new Random();
@@ -47,9 +51,21 @@ function App() {
 
   return (
     <div className="container-fluid bg-light text-dark min-vh-100 p-3">
-      <div className="d-flex justify-content-center">
-        <button className="btn btn-primary mb-3" onClick={handleGenerate}>
-          Generate New Numbers
+      <div className="d-flex justify-content-center gap-1">
+        <button className="btn btn-sm btn-primary mb-3" onClick={handleGenerate}>
+          Generate
+        </button>
+        <button className={`btn btn-sm btn-success mb-3 ${count1 > 0 ? 'px-4' : ''}`} onClick={() => setCount1(count1 + 1)}>
+          <i class="bi bi-arrow-up"></i> {count1 || 'count1'}
+        </button>
+        <button className={`btn btn-sm btn-success mb-3 ${count2 > 0 ? 'px-4' : ''}`} onClick={() => setCount2(count2 + 1)}>
+          <i class="bi bi-arrow-down"></i> {count2 || 'count2'}
+        </button>
+        <button className={`btn btn-sm btn-danger mb-3 ${count3 > 0 ? 'px-4' : ''}`} onClick={() => setCount3(count3 + 1)}>
+          <i class="bi bi-arrow-up"></i> {count3 || 'count3'}
+        </button>
+        <button className={`btn btn-sm btn-danger mb-3 ${count4 > 0 ? 'px-4' : ''}`} onClick={() => setCount4(count4 + 1)}>
+          <i class="bi bi-arrow-down"></i> {count4 || 'count4'}
         </button>
       </div>
 

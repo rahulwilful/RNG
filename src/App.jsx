@@ -95,7 +95,7 @@ function App() {
 
       <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
         {/* Sorted Numbers */}
-        <div className="border">
+        <div className="border p-2 rounded shadow mt-0 mt-sm-3">
           <h4 className="text-center fs-6 fs-sm-4 ">Sorted Numbers</h4>
           <div className="row justify-content-center">
             {sortedNumbers.map((num, index) => {
@@ -106,7 +106,7 @@ function App() {
               return (
                 <div
                   key={index}
-                  className={`col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                  className={`shadow-xs col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
                   style={{
                     backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
                     padding: '10px',
@@ -120,7 +120,7 @@ function App() {
           </div>
         </div>
 
-        <div className="border">
+        <div className="border p-2 rounded shadow mt-0 mt-sm-3">
           {/* Unique Numbers */}
           <h4 className="text-center fs-6 fs-sm-4">Unique Numbers</h4>
           <div className="row justify-content-center text-light">
@@ -133,7 +133,7 @@ function App() {
               return (
                 <div
                   key={index}
-                  className={`col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                  className={`shadow-xs col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
                   style={{
                     // if winning → yellow, else normal roulette color
                     backgroundColor: isWinning ? '#ffc107' : getBgColor(color),

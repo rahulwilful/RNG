@@ -16,22 +16,30 @@ function App() {
   const [count3, setCount3] = useState(0);
   const [count4, setCount4] = useState(0);
 
+  const [totalGenerated, setTotalGenerated] = useState(0);
+
   // winning number entered by user
   const [winningNumber, setWinningNumber] = useState(null);
 
   // generate a random number between 0–36
-  const generateRandomNumber = () => {
+  const generateRandomNumber = i => {
     const random = new Random();
-    return random.integer(0, 36);
+    const number = random.integer(0, 36);
+    console.log('generateRandomNumber -> number ' + i + ' -> ', number);
+    return number;
   };
 
   // generate 19 UNIQUE numbers using Set (duplicates auto removed)
   const generate19UniqueNumbers = () => {
     const uniqueNumbers = new Set();
+    let i = 0;
 
     while (uniqueNumbers.size < 19) {
-      uniqueNumbers.add(generateRandomNumber());
+      uniqueNumbers.add(generateRandomNumber(i));
+      i++;
     }
+
+    setTotalGenerated(i);
 
     return Array.from(uniqueNumbers);
   };
@@ -83,8 +91,8 @@ function App() {
 
       {/* Generate + Input */}
       <div className="d-flex gap-2 justify-content-center">
-        <button className="btn btn-sm btn-primary mb-3" onClick={handleGenerate}>
-          Generate
+        <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={handleGenerate}>
+          Generate ({totalGenerated})
         </button>
 
         {/* Bind input to winningNumber */}

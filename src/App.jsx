@@ -75,16 +75,16 @@ function App() {
     <div className="container-fluid bg-light text-dark min-vh-100 p-3">
       {/* Counter buttons */}
       <div className="d-flex justify-content-center gap-1">
-        <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-2  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
+        <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
           <i class="bi bi-arrow-up"></i> {count1 || 'count1'}
         </button>
-        <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-2  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
+        <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
           <i class="bi bi-arrow-down"></i> {count2 || 'count2'}
         </button>
-        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-2 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
+        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
           <i class="bi bi-arrow-up"></i> {count3 || 'count3'}
         </button>
-        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-2 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
+        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
           <i class="bi bi-arrow-down"></i> {count4 || 'count4'}
         </button>
       </div>

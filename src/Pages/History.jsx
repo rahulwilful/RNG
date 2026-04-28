@@ -67,7 +67,7 @@ const History = () => {
             <i class="bi bi-trash fs-3 " onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}></i>
           </div>
         </div>
-        <div className={`${history.length > 0 ? '' : 'd-none'} d-flex justify-content-center gap-2 mt-3`}>
+        <div className={`${history.length > 0 ? '' : 'd-none'} d-flex justify-content-center gap-2 mb-3`}>
           <button className="btn btn-sm btn-secondary" disabled={page === 1} onClick={() => setPage(prev => prev - 1)}>
             Prev
           </button>
@@ -86,7 +86,7 @@ const History = () => {
           {currentData.map((item, idx) => (
             <div key={item.id} className="border rounded p-2 mb-3 shadow-sm">
               {/* COUNTS */}
-              <div className="d-flex justify-content-center gap-1 mb-2">
+              <div className="d-flex justify-content-center  border-bottom pb-1 border-primary rounded border-3 gap-1 mb-2">
                 <button className="btn btn-sm btn-success">↑ {item.count1}</button>
                 <button className="btn btn-sm btn-success">↓ {item.count2}</button>
                 <button className="btn btn-sm btn-danger">↑ {item.count3}</button>

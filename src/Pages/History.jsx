@@ -86,7 +86,7 @@ const History = () => {
           {currentData.map((item, idx) => (
             <div key={item.id} className="border rounded p-2 mb-3 shadow-sm">
               {/* COUNTS */}
-              <div className="d-flex justify-content-center  border-bottom pb-1 border-primary rounded border-3 gap-4 mb-2">
+              <div className="d-flex justify-content-center  border-bottom pb-1 border-primary rounded border-3 gap-3 mb-2">
                 <button className="btn btn-sm btn-success">↑ {item.count1}</button>
                 <button className="btn btn-sm btn-success">↓ {item.count2}</button>
                 <button className="btn btn-sm btn-danger">↑ {item.count3}</button>

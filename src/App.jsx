@@ -1,11 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './App.css';
 import { Random } from 'random-js';
 import { RouletteNumbersSorted } from './constants/RouletteNumbers';
+import { clearCounts, getCounts, saveCounts } from './IndexDB/IndexDB';
 
 function App() {
   // store randomly generated unique numbers
   const [numbers, setNumbers] = useState([]);
+
+  const isFirstLoad = useRef(true);
 
   // store sorted version of numbers
   const [sortedNumbers, setSortedNumbers] = useState([]);
@@ -21,11 +24,50 @@ function App() {
   // winning number entered by user
   const [winningNumber, setWinningNumber] = useState(null);
 
+  useEffect(() => {
+    const loadCounts = async () => {
+      const data = await getCounts();
+      console.log(data);
+
+      if (data) {
+        setCount1(data.count1 || 0);
+        setCount2(data.count2 || 0);
+        setCount3(data.count3 || 0);
+        setCount4(data.count4 || 0);
+      }
+    };
+
+    loadCounts();
+  }, []);
+
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+      return; // 🚫 skip first run
+    }
+    saveCounts({
+      count1,
+      count2,
+      count3,
+      count4
+    });
+  }, [count1, count2, count3, count4]);
+
+  const handleClearCounts = async () => {
+    console.log('handleClearCounts called');
+    await clearCounts();
+
+    setCount1(0);
+    setCount2(0);
+    setCount3(0);
+    setCount4(0);
+  };
+
   // generate a random number between 0–36
   const generateRandomNumber = i => {
     const random = new Random();
     const number = random.integer(0, 36);
-    console.log('generateRandomNumber -> number ' + i + ' -> ', number);
+    // console.log('generateRandomNumber -> number ' + i + ' -> ', number);
     return number;
   };
 
@@ -76,16 +118,16 @@ function App() {
       {/* Counter buttons */}
       <div className="d-flex justify-content-center gap-1">
         <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
-          <i class="bi bi-arrow-up"></i> {count1 || 'count1'}
+          <i className="bi bi-arrow-up"></i> {count1 || 'count1'}
         </button>
         <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
-          <i class="bi bi-arrow-down"></i> {count2 || 'count2'}
+          <i className="bi bi-arrow-down"></i> {count2 || 'count2'}
         </button>
         <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
-          <i class="bi bi-arrow-up"></i> {count3 || 'count3'}
+          <i className="bi bi-arrow-up"></i> {count3 || 'count3'}
         </button>
         <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
-          <i class="bi bi-arrow-down"></i> {count4 || 'count4'}
+          <i className="bi bi-arrow-down"></i> {count4 || 'count4'}
         </button>
       </div>
 
@@ -96,8 +138,17 @@ function App() {
         </button>
 
         {/* Bind input to winningNumber */}
-        <div class="input-group input-group-sm mb-3">
-          <input type="number" class="form-control" placeholder="Enter Winning Number" value={winningNumber ?? ''} onChange={e => setWinningNumber(Number(e.target.value))} />
+        <div className="input-group input-group-sm mb-3">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Enter Winning Number"
+            value={winningNumber ?? ''}
+            onChange={e => {
+              const value = e.target.value;
+              setWinningNumber(value === '' ? null : Number(value));
+            }}
+          />
         </div>
       </div>
 
@@ -109,7 +160,7 @@ function App() {
             {sortedNumbers.map((num, index) => {
               const color = getColor(num);
 
-              const isWinning = Number(winningNumber) === num;
+              const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
 
               return (
                 <div
@@ -136,7 +187,7 @@ function App() {
               const color = getColor(num);
 
               // check if this is the winning number
-              const isWinning = Number(winningNumber) === num;
+              const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
 
               return (
                 <div

@@ -103,6 +103,7 @@ const Home = () => {
 
   // generate numbers + sorted numbers
   const handleGenerate = () => {
+    setWinningNumber(null);
     const result = generate19UniqueNumbers();
     setNumbers(result);
 
@@ -177,9 +178,7 @@ const Home = () => {
             <i class="bi bi-floppy2"></i>
           </button>
           <Link to="/history">
-            <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={saveHistoryEntry}>
-              History
-            </button>
+            <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3">History</button>
           </Link>
         </div>
 

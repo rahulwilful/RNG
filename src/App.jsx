@@ -3,10 +3,13 @@ import './App.css';
 import { Random } from 'random-js';
 import { RouletteNumbersSorted } from './constants/RouletteNumbers';
 import { clearCounts, getCounts, saveCounts } from './IndexDB/IndexDB';
+import ManualModal from './components/ManualModal';
 
 function App() {
   // store randomly generated unique numbers
   const [numbers, setNumbers] = useState([]);
+
+  const [showModal, setShowModal] = useState(false);
 
   const isFirstLoad = useRef(true);
 
@@ -61,6 +64,7 @@ function App() {
     setCount2(0);
     setCount3(0);
     setCount4(0);
+    setShowModal(false);
   };
 
   // generate a random number between 0–36
@@ -113,101 +117,112 @@ function App() {
     return 'green';
   };
 
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   return (
-    <div className="container-fluid bg-light text-dark min-vh-100 p-3">
-      {/* Counter buttons */}
-      <div className="d-flex justify-content-center gap-1">
-        <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
-          <i className="bi bi-arrow-up"></i> {count1 || 'count1'}
-        </button>
-        <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
-          <i className="bi bi-arrow-down"></i> {count2 || 'count2'}
-        </button>
-        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
-          <i className="bi bi-arrow-up"></i> {count3 || 'count3'}
-        </button>
-        <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
-          <i className="bi bi-arrow-down"></i> {count4 || 'count4'}
-        </button>
-      </div>
+    <>
+      <ManualModal show={showModal} message={'Clear Data'} handleClearCounts={handleClearCounts} onHide={() => setShowModal(false)} closeModal={closeModal} />
+      <div className="container-fluid bg-light text-dark min-vh-100 p-3">
+        {/* Counter buttons */}
+        <div className="d-flex justify-content-center gap-1">
+          <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
+            <i className="bi bi-arrow-up"></i> {count1 || 'count1'}
+          </button>
+          <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
+            <i className="bi bi-arrow-down"></i> {count2 || 'count2'}
+          </button>
+          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
+            <i className="bi bi-arrow-up"></i> {count3 || 'count3'}
+          </button>
+          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
+            <i className="bi bi-arrow-down"></i> {count4 || 'count4'}
+          </button>
 
-      {/* Generate + Input */}
-      <div className="d-flex gap-2 justify-content-center">
-        <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={handleGenerate}>
-          Generate ({totalGenerated})
-        </button>
-
-        {/* Bind input to winningNumber */}
-        <div className="input-group input-group-sm mb-3">
-          <input
-            type="number"
-            className="form-control"
-            placeholder="Enter Winning Number"
-            value={winningNumber ?? ''}
-            onChange={e => {
-              const value = e.target.value;
-              setWinningNumber(value === '' ? null : Number(value));
-            }}
-          />
+          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setShowModal(true)}>
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
-      </div>
 
-      <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
-        {/* Sorted Numbers */}
-        <div className="border p-2 rounded shadow mt-0 mt-sm-3">
-          <h4 className="text-center fs-6 fs-sm-4 ">Sorted Numbers</h4>
-          <div className="row justify-content-center">
-            {sortedNumbers.map((num, index) => {
-              const color = getColor(num);
+        {/* Generate + Input */}
+        <div className="d-flex gap-2 justify-content-center">
+          <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={handleGenerate}>
+            Generate ({totalGenerated})
+          </button>
 
-              const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
-
-              return (
-                <div
-                  key={index}
-                  className={`shadow-xs col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
-                  style={{
-                    backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                    padding: '10px',
-                    fontSize: '18px',
-                    color: isWinning ? '#000' : '#fff'
-                  }}>
-                  {num}
-                </div>
-              );
-            })}
+          {/* Bind input to winningNumber */}
+          <div className="input-group input-group-sm mb-3">
+            <input
+              type="number"
+              className="form-control"
+              placeholder="Enter Winning Number"
+              value={winningNumber ?? ''}
+              onChange={e => {
+                const value = e.target.value;
+                setWinningNumber(value === '' ? null : Number(value));
+              }}
+            />
           </div>
         </div>
 
-        <div className="border p-2 rounded shadow mt-0 mt-sm-3">
-          {/* Unique Numbers */}
-          <h4 className="text-center fs-6 fs-sm-4">Unique Numbers</h4>
-          <div className="row justify-content-center text-light">
-            {numbers.map((num, index) => {
-              const color = getColor(num);
+        <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
+          {/* Sorted Numbers */}
+          <div className="border p-2 rounded shadow mt-0 mt-sm-3">
+            <h4 className="text-center fs-6 fs-sm-4 ">Sorted Numbers</h4>
+            <div className="row justify-content-center">
+              {sortedNumbers.map((num, index) => {
+                const color = getColor(num);
 
-              // check if this is the winning number
-              const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
+                const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
 
-              return (
-                <div
-                  key={index}
-                  className={`shadow-xs col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
-                  style={{
-                    // if winning → yellow, else normal roulette color
-                    backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                    padding: '10px',
-                    fontSize: '18px',
-                    color: isWinning ? '#000' : '#fff'
-                  }}>
-                  {num}
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={index}
+                    className={`shadow-xs col-3 col-sm-2 col-md-1 text-light m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                    style={{
+                      backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                      padding: '10px',
+                      fontSize: '18px',
+                      color: isWinning ? '#000' : '#fff'
+                    }}>
+                    {num}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="border p-2 rounded shadow mt-0 mt-sm-3">
+            {/* Unique Numbers */}
+            <h4 className="text-center fs-6 fs-sm-4">Unique Numbers</h4>
+            <div className="row justify-content-center text-light">
+              {numbers.map((num, index) => {
+                const color = getColor(num);
+
+                // check if this is the winning number
+                const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
+
+                return (
+                  <div
+                    key={index}
+                    className={`shadow-xs col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded ${isWinning ? 'border border-3 border-warning' : ''}`}
+                    style={{
+                      // if winning → yellow, else normal roulette color
+                      backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                      padding: '10px',
+                      fontSize: '18px',
+                      color: isWinning ? '#000' : '#fff'
+                    }}>
+                    {num}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

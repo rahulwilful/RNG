@@ -11,6 +11,10 @@ const Home = () => {
 
   const [showModal, setShowModal] = useState(false);
 
+  const [showMissingNumbers, setShowMissingNumbers] = useState(false);
+
+  const [missingNumbers, setMissingNumbers] = useState([]);
+
   const isFirstLoad = useRef(true);
 
   // store sorted version of numbers
@@ -104,12 +108,20 @@ const Home = () => {
   // generate numbers + sorted numbers
   const handleGenerate = () => {
     setWinningNumber(null);
+
     const result = generate19UniqueNumbers();
     setNumbers(result);
 
-    // create sorted copy (ascending)
+    // sorted numbers
     const sorted = [...result].sort((a, b) => a - b);
     setSortedNumbers(sorted);
+
+    // 👉 find missing numbers (0–36)
+    const allNumbers = Array.from({ length: 37 }, (_, i) => i);
+
+    const missing = allNumbers.filter(num => !result.includes(num));
+
+    setMissingNumbers(missing);
   };
 
   // run once on component mount
@@ -235,6 +247,35 @@ const Home = () => {
                   </button>
                 );
               })}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div className="border p-2 rounded shadow mt-3">
+            <div className="w-100  d-flex px-4">
+              <i className={`bi ${showMissingNumbers ? 'bi-eye-slash-fill' : 'bi-eye-fill'} `} style={{ cursor: 'pointer' }} onClick={() => setShowMissingNumbers(!showMissingNumbers)}></i>
+            </div>
+            <div className={`${showMissingNumbers ? 'd-block' : 'd-none'}  `}>
+              <h4 className="text-center fs-6 fs-sm-4">Missing Numbers</h4>
+              <div className="row justify-content-center">
+                {missingNumbers.map((num, index) => {
+                  const color = getColor(num);
+
+                  return (
+                    <button
+                      key={index}
+                      className="rounded shadow-xs btn-sm col-3 col-sm-2 col-md-1 m-1 text-center fw-bold border-0"
+                      style={{
+                        backgroundColor: getBgColor(color),
+                        padding: '10px',
+                        fontSize: '18px',
+                        color: '#fff'
+                      }}>
+                      {num}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

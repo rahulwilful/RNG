@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const ManualModal = ({ show, message, onHide, handleClearCounts, closeModal }) => {
+const ManualModal = ({ show, message, onHide, reduceCountsBy1AndSave, handleClearCounts, closeModal }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const jokerValueRef = useRef(null);
@@ -39,6 +39,10 @@ const ManualModal = ({ show, message, onHide, handleClearCounts, closeModal }) =
           <div className="d-flex gap-2">
             <button className={`btn btn-sm d-flex btn-danger   mb-3`} onClick={handleClearCounts}>
               Clear
+            </button>
+
+            <button className={`btn btn-sm d-flex btn-danger   mb-3`} onClick={reduceCountsBy1AndSave}>
+              -1
             </button>
             <button className={`btn btn-sm d-flex btn-success mb-3`} onClick={closeModal}>
               Close

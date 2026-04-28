@@ -56,6 +56,17 @@ function App() {
     });
   }, [count1, count2, count3, count4]);
 
+  const reduceCountsBy1AndSave = () => {
+    const counts = {count1: count1 - 1, count2: count2 - 1, count3: count3 - 1, count4: count4 - 1};
+    saveCounts(counts);
+    setCount1(prev => Math.max(prev - 1, 0));
+    setCount2(prev => Math.max(prev - 1, 0));
+    setCount3(prev => Math.max(prev - 1, 0));
+    setCount4(prev => Math.max(prev - 1, 0));
+
+    setShowModal(false);
+  };
+
   const handleClearCounts = async () => {
     console.log('handleClearCounts called');
     await clearCounts();
@@ -123,7 +134,7 @@ function App() {
 
   return (
     <>
-      <ManualModal show={showModal} message={'Clear Data'} handleClearCounts={handleClearCounts} onHide={() => setShowModal(false)} closeModal={closeModal} />
+      <ManualModal show={showModal} message={'Clear Data'} handleClearCounts={handleClearCounts} reduceCountsBy1AndSave={reduceCountsBy1AndSave} onHide={() => setShowModal(false)} closeModal={closeModal} />
       <div className="container-fluid bg-light text-dark min-vh-100 p-3">
         {/* Counter buttons */}
         <div className="d-flex justify-content-center gap-1">
@@ -140,7 +151,7 @@ function App() {
             <i className="bi bi-arrow-down"></i> {count4 || 'count4'}
           </button>
 
-          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setShowModal(true)}>
+          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-1 ' : ''}`} onClick={() => setShowModal(true)}>
             <i class="bi bi-x-lg"></i>
           </button>
         </div>

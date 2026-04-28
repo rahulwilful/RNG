@@ -67,6 +67,19 @@ const History = () => {
             <i class="bi bi-trash fs-3 " onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}></i>
           </div>
         </div>
+        <div className={`${history.length > 0 ? '' : 'd-none'} d-flex justify-content-center gap-2 mt-3`}>
+          <button className="btn btn-sm btn-secondary" disabled={page === 1} onClick={() => setPage(prev => prev - 1)}>
+            Prev
+          </button>
+
+          <span className="align-self-center">
+            Page {page} / {totalPages || 1}
+          </span>
+
+          <button className="btn btn-sm btn-secondary" disabled={page === totalPages} onClick={() => setPage(prev => prev + 1)}>
+            Next
+          </button>
+        </div>
 
         {/* HISTORY LIST */}
         <div className={`${history.length > 0 ? '' : 'd-none'}`}>

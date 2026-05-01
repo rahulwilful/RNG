@@ -1,7 +1,8 @@
 // DB config
 const DB_NAME = 'RouletteDB';
 const STORE_NAME = 'counts';
-const DB_VERSION = 2;
+const DB_VERSION = 3;
+const AMOUNT_STORE = 'amounts';
 
 // open DB
 export const openDB = () => {
@@ -22,12 +23,18 @@ export const openDB = () => {
         // optional: index for sorting by time
         historyStore.createIndex('createdAt', 'createdAt', { unique: false });
       }
+
+      if (!db.objectStoreNames.contains(AMOUNT_STORE)) {
+        db.createObjectStore(AMOUNT_STORE, { keyPath: 'id' });
+      }
     };
 
     request.onsuccess = () => resolve(request.result);
     request.onerror = () => reject(request.error);
   });
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // save counts data (overwrites existing)
 export const saveCounts = async data => {
@@ -79,7 +86,9 @@ export const clearCounts = async () => {
   });
 };
 
-export const saveHistory = async ({ numbers, winningNumber, count1, count2, count3, count4 }) => {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const saveHistory = async ({ numbers, winningNumber, count1, count2, count3, count4, sumAmount, betAmount, winAmount }) => {
   const db = await openDB();
 
   return new Promise((resolve, reject) => {
@@ -94,6 +103,12 @@ export const saveHistory = async ({ numbers, winningNumber, count1, count2, coun
       count2,
       count3,
       count4,
+
+      // ✅ NEW FIELDS
+      sumAmount,
+      betAmount,
+      winAmount,
+
       createdAt: new Date().toISOString()
     };
 
@@ -131,6 +146,85 @@ export const clearHistory = async () => {
     const store = tx.objectStore('history');
 
     store.clear();
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const saveAmounts = async ({ sumAmount, betAmount, winAmount }) => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(AMOUNT_STORE, 'readwrite');
+    const store = tx.objectStore(AMOUNT_STORE);
+
+    store.put({
+      id: 'amountData',
+      sumAmount,
+      betAmount,
+      winAmount
+    });
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+};
+
+export const getAmounts = async () => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(AMOUNT_STORE, 'readonly');
+    const store = tx.objectStore(AMOUNT_STORE);
+
+    const request = store.get('amountData');
+
+    request.onsuccess = () => resolve(request.result || null);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+export const updateAmounts = async updates => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(AMOUNT_STORE, 'readwrite');
+    const store = tx.objectStore(AMOUNT_STORE);
+
+    const request = store.get('amountData');
+
+    request.onsuccess = () => {
+      const existing = request.result || {
+        id: 'amountData',
+        sumAmount: 0,
+        betAmount: 0,
+        winAmount: 0
+      };
+
+      const updated = {
+        ...existing,
+        ...updates
+      };
+
+      store.put(updated);
+    };
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+};
+
+export const clearAmounts = async () => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(AMOUNT_STORE, 'readwrite');
+    const store = tx.objectStore(AMOUNT_STORE);
+
+    store.delete('amountData');
 
     tx.oncomplete = () => resolve(true);
     tx.onerror = () => reject(tx.error);

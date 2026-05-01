@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import { Random } from 'random-js';
 import { RouletteNumbersSorted } from '../constants/RouletteNumbers';
-import { clearCounts, clearHistory, getCounts, getHistory, saveCounts, saveHistory } from '../IndexDB/IndexDB';
+import { clearCounts, clearHistory, getAmounts, getCounts, getHistory, saveCounts, saveHistory, updateAmounts } from '../IndexDB/IndexDB';
 import ManualModal from '../components/ManualModal';
 import { Link } from 'react-router-dom';
 
@@ -16,6 +16,10 @@ const Home = () => {
   const [missingNumbers, setMissingNumbers] = useState([]);
 
   const isFirstLoad = useRef(true);
+
+  const [sumAmount, setSumAmount] = useState(0);
+  const [betAmount, setBetAmount] = useState(0);
+  const [winAmount, setWinAmount] = useState(0);
 
   // store sorted version of numbers
   const [sortedNumbers, setSortedNumbers] = useState([]);
@@ -45,7 +49,19 @@ const Home = () => {
     };
 
     loadCounts();
+    getAllAmounts();
   }, []);
+
+  const getAllAmounts = async () => {
+    console.log('getAmounts called');
+    const data = await getAmounts();
+    console.log('getAmounts -> data', data);
+    if (data) {
+      setSumAmount(data.sumAmount || 0);
+      setBetAmount(data.betAmount || 0);
+      setWinAmount(data.winAmount || 0);
+    }
+  };
 
   useEffect(() => {
     if (isFirstLoad.current) {
@@ -145,15 +161,50 @@ const Home = () => {
     setShowModal(false);
   };
 
-  const saveHistoryEntry = async () => {
+  const saveHistoryEntry = async tempSumAmount => {
     await saveHistory({
       numbers,
       winningNumber,
       count1,
       count2,
       count3,
-      count4
+      count4,
+      sumAmount: tempSumAmount || sumAmount,
+      betAmount,
+      winAmount
     });
+  };
+
+  const increaseProfit = async () => {
+    setCount1(count1 + 1);
+    const tempSumAmount = sumAmount + winAmount;
+
+    const payload = {
+      sumAmount: tempSumAmount,
+      betAmount: betAmount,
+      winAmount: winAmount
+    };
+
+    await updateAmounts(payload);
+
+    await getAllAmounts();
+    saveHistoryEntry(tempSumAmount);
+  };
+
+  const decreaseProfit = async () => {
+    setCount2(count2 + 1);
+    const tempSumAmount = sumAmount - betAmount;
+
+    const payload = {
+      sumAmount: tempSumAmount,
+      betAmount: betAmount,
+      winAmount: winAmount
+    };
+
+    await updateAmounts(payload);
+
+    await getAllAmounts();
+    saveHistoryEntry(tempSumAmount);
   };
 
   return (
@@ -162,18 +213,23 @@ const Home = () => {
       <div className="container-fluid bg-light text-dark min-vh-100 p-3">
         {/* Counter buttons */}
         <div className="d-flex justify-content-center gap-1">
-          <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount1(count1 + 1)}>
+          <button className={`btn btn-sm d-flex btn-success mb-3 ${count1 > 0 ? 'px-4  ' : ''}`} onClick={() => increaseProfit()}>
             <i className="bi bi-arrow-up"></i> {count1 || 'count1'}
           </button>
-          <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
+          <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => decreaseProfit()}>
             <i className="bi bi-arrow-down"></i> {count2 || 'count2'}
           </button>
-          <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
+          <Link to="/sum-and-bets">
+            <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
+              {sumAmount || 'sum'}
+            </button>
+          </Link>
+          {/*    <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
             <i className="bi bi-arrow-up"></i> {count3 || 'count3'}
           </button>
           <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount4(count4 + 1)}>
             <i className="bi bi-arrow-down"></i> {count4 || 'count4'}
-          </button>
+          </button> */}
 
           <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-1 ' : ''}`} onClick={() => setShowModal(true)}>
             <i class="bi bi-x-lg"></i>

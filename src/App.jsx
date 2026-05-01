@@ -8,6 +8,7 @@ import { clearCounts, clearHistory, getCounts, getHistory, saveCounts, saveHisto
 import ManualModal from './components/ManualModal';
 import Home from './Pages/Home';
 import History from './Pages/History';
+import SumAndBets from './Pages/SumAndBets';
 
 function App() {
   // store randomly generated unique numbers
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/history" element={<History />} />
+        <Route path="/sum-and-bets" element={<SumAndBets />} />
       </Routes>
     </>
   );

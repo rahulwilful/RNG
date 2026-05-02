@@ -220,9 +220,7 @@ const Home = () => {
             <i className="bi bi-arrow-down"></i> {count2 || 'count2'}
           </button>
           <Link to="/sum-and-bets">
-            <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`} onClick={() => setCount2(count2 + 1)}>
-              {sumAmount || 'sum'}
-            </button>
+            <button className={`btn btn-sm d-flex btn-success mb-3 ${count2 > 0 ? 'px-4  ' : ''}`}>{sumAmount || 'sum'}</button>
           </Link>
           {/*    <button className={`btn btn-sm d-flex btn-danger mb-3 ${count3 > 0 ? 'px-4 ' : ''}`} onClick={() => setCount3(count3 + 1)}>
             <i className="bi bi-arrow-up"></i> {count3 || 'count3'}

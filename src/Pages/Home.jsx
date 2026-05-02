@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 
 import { Random } from 'random-js';
 import { RouletteNumbersSorted } from '../constants/RouletteNumbers';
-import { clearCounts, clearHistory, getAmounts, getCounts, getHistory, saveCounts, saveHistory, updateAmounts } from '../IndexDB/IndexDB';
+import { clearCounts, clearHistory, getAmounts, getCounts, getCurrentNumbers, getHistory, saveCounts, saveCurrentNumbers, saveHistory, updateAmounts } from '../IndexDB/IndexDB';
 import ManualModal from '../components/ManualModal';
 import { Link } from 'react-router-dom';
 
@@ -122,11 +122,12 @@ const Home = () => {
   };
 
   // generate numbers + sorted numbers
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setWinningNumber(null);
 
     const result = generate19UniqueNumbers();
     setNumbers(result);
+    await saveCurrentNumbers(result);
 
     // sorted numbers
     const sorted = [...result].sort((a, b) => a - b);
@@ -140,9 +141,30 @@ const Home = () => {
     setMissingNumbers(missing);
   };
 
+  const getCurrentGeneratedNumbers = async () => {
+    const result = await getCurrentNumbers();
+    if (result.length > 0) {
+      console.log('saved Result: ', result);
+      setNumbers(result);
+      const sorted = [...result].sort((a, b) => a - b);
+      setSortedNumbers(sorted);
+
+      // 👉 find missing numbers (0–36)
+      const allNumbers = Array.from({ length: 37 }, (_, i) => i);
+
+      const missing = allNumbers.filter(num => !result.includes(num));
+
+      setMissingNumbers(missing);
+
+      return;
+    }
+    handleGenerate();
+  };
+
   // run once on component mount
   useEffect(() => {
-    handleGenerate();
+    // handleGenerate();
+    getCurrentGeneratedNumbers();
   }, []);
 
   // helper: get color (red/black/green) for a number
@@ -230,7 +252,7 @@ const Home = () => {
           </button> */}
 
           <button className={`btn btn-sm d-flex btn-danger mb-3 ${count4 > 0 ? 'px-1 ' : ''}`} onClick={() => setShowModal(true)}>
-            <i class="bi bi-x-lg"></i>
+            <i className="bi bi-x-lg"></i>
           </button>
         </div>
 
@@ -241,7 +263,7 @@ const Home = () => {
           </button>
 
           <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={saveHistoryEntry}>
-            <i class="bi bi-floppy2"></i>
+            <i className="bi bi-floppy2"></i>
           </button>
           <Link to="/history">
             <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3">History</button>
@@ -253,7 +275,7 @@ const Home = () => {
           <div className="border p-2 rounded shadow mt-0 mt-sm-3">
             <h4 className="text-center fs-6 fs-sm-4 ">Sorted Numbers</h4>
             <div className="row justify-content-center">
-              {sortedNumbers.map((num, index) => {
+              {sortedNumbers?.map((num, index) => {
                 const color = getColor(num);
 
                 const isWinning = winningNumber !== null && winningNumber !== '' && Number(winningNumber) === num;
@@ -280,7 +302,7 @@ const Home = () => {
             {/* Unique Numbers */}
             <h4 className="text-center fs-6 fs-sm-4">Unique Numbers</h4>
             <div className="row justify-content-center text-light">
-              {numbers.map((num, index) => {
+              {numbers?.map((num, index) => {
                 const color = getColor(num);
 
                 // check if this is the winning number
@@ -312,7 +334,7 @@ const Home = () => {
             <div className={`${showMissingNumbers ? 'd-block' : 'd-none'}  `}>
               <h4 className="text-center fs-6 fs-sm-4">Missing Numbers</h4>
               <div className="row justify-content-center">
-                {missingNumbers.map((num, index) => {
+                {missingNumbers?.map((num, index) => {
                   const color = getColor(num);
 
                   return (

@@ -1,7 +1,7 @@
 // DB config
 const DB_NAME = 'RouletteDB';
 const STORE_NAME = 'counts';
-const DB_VERSION = 3;
+const DB_VERSION = 4;
 const AMOUNT_STORE = 'amounts';
 
 // open DB
@@ -26,6 +26,11 @@ export const openDB = () => {
 
       if (!db.objectStoreNames.contains(AMOUNT_STORE)) {
         db.createObjectStore(AMOUNT_STORE, { keyPath: 'id' });
+      }
+
+      // inside openDB (upgrade section)
+      if (!db.objectStoreNames.contains('currentNumbers')) {
+        db.createObjectStore('currentNumbers', { keyPath: 'id' });
       }
     };
 
@@ -138,6 +143,20 @@ export const getHistory = async () => {
   });
 };
 
+export const deleteHistoryItem = async id => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('history', 'readwrite');
+    const store = tx.objectStore('history');
+
+    const request = store.delete(id);
+
+    request.onsuccess = () => resolve(true);
+    request.onerror = () => reject(request.error);
+  });
+};
+
 export const clearHistory = async () => {
   const db = await openDB();
 
@@ -228,5 +247,43 @@ export const clearAmounts = async () => {
 
     tx.oncomplete = () => resolve(true);
     tx.onerror = () => reject(tx.error);
+  });
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+export const saveCurrentNumbers = async numbers => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('currentNumbers', 'readwrite');
+    const store = tx.objectStore('currentNumbers');
+
+    const data = {
+      id: 'current', // fixed ID → always overwrite
+      numbers,
+      updatedAt: new Date().toISOString()
+    };
+
+    const request = store.put(data); // put = insert OR update
+
+    request.onsuccess = () => resolve(data);
+    request.onerror = () => reject(request.error);
+  });
+};
+
+export const getCurrentNumbers = async () => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('currentNumbers', 'readonly');
+    const store = tx.objectStore('currentNumbers');
+
+    const request = store.get('current');
+
+    request.onsuccess = () => {
+      resolve(request.result ? request.result.numbers : []);
+    };
+
+    request.onerror = () => reject(request.error);
   });
 };

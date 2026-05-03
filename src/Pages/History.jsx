@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { clearHistory, getHistory } from '../IndexDB/IndexDB';
+import { clearHistory, getHistory, deleteHistoryItem } from '../IndexDB/IndexDB';
 import { RouletteNumbersSorted } from '../constants/RouletteNumbers';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '../components/DeleteModal';
@@ -7,6 +7,7 @@ import DeleteModal from '../components/DeleteModal';
 const ITEMS_PER_PAGE = 5;
 
 const History = () => {
+  const [selectedId, setSelectedId] = useState(null);
   const [history, setHistory] = useState([]);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
@@ -52,6 +53,15 @@ const History = () => {
     if (color === 'red') return '#dc3545';
     if (color === 'black') return '#212529';
     return 'green';
+  };
+
+  const handleDeleteItem = async id => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this record?');
+
+    if (!confirmDelete) return;
+
+    await deleteHistoryItem(id);
+    loadHistory();
   };
 
   return (
@@ -117,6 +127,9 @@ const History = () => {
 
               return (
                 <div key={item.id} className="border rounded p-3 mb-3 shadow-sm bg-white">
+                  <div className="d-flex justify-content-end">
+                    <i className="bi bi-x-circle text-danger" style={{ cursor: 'pointer', fontSize: '18px' }} onClick={() => handleDeleteItem(item.id)}></i>
+                  </div>
                   {/* COUNTS */}
                   <div className="d-flex justify-content-center border-bottom pb-2 mb-2 gap-2">
                     <button className="btn btn-sm btn-success">↑ {item.count1}</button>

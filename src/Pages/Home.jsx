@@ -294,9 +294,9 @@ const Home = () => {
                       key={index}
                       className="text-center fw-bold me-2 rounded"
                       style={{
-                        minWidth: '45px',
-                        height: '45px',
-                        lineHeight: '45px',
+                        minWidth: '20px',
+                        height: '20px',
+                        lineHeight: '20px',
                         backgroundColor: num.winningNumber ? '#ffc107' : '#6c757d',
                         color: isWinning ? '#000' : '#fff',
                         fontSize: '16px',

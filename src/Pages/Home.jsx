@@ -21,6 +21,8 @@ const Home = () => {
   const [betAmount, setBetAmount] = useState(0);
   const [winAmount, setWinAmount] = useState(0);
 
+  const [history, setHistory] = useState([]);
+
   // store sorted version of numbers
   const [sortedNumbers, setSortedNumbers] = useState([]);
 
@@ -50,7 +52,14 @@ const Home = () => {
 
     loadCounts();
     getAllAmounts();
+    loadHistory();
   }, []);
+
+  const loadHistory = async () => {
+    const data = await getHistory();
+    console.log('history', data);
+    setHistory(data || []);
+  };
 
   const getAllAmounts = async () => {
     console.log('getAmounts called');
@@ -68,6 +77,7 @@ const Home = () => {
       isFirstLoad.current = false;
       return; // 🚫 skip first run
     }
+
     saveCounts({
       count1,
       count2,
@@ -210,7 +220,8 @@ const Home = () => {
     await updateAmounts(payload);
 
     await getAllAmounts();
-    saveHistoryEntry(tempSumAmount);
+    await saveHistoryEntry(tempSumAmount);
+    loadHistory();
   };
 
   const decreaseProfit = async () => {
@@ -226,7 +237,8 @@ const Home = () => {
     await updateAmounts(payload);
 
     await getAllAmounts();
-    saveHistoryEntry(tempSumAmount);
+    await saveHistoryEntry(tempSumAmount);
+    loadHistory();
   };
 
   return (
@@ -268,6 +280,35 @@ const Home = () => {
           <Link to="/history">
             <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3">History</button>
           </Link>
+        </div>
+
+        <div className="border border-danger border-5">
+          {history.length > 0 && (
+            <div className="card p-3 mb-3 shadow-sm rounded-4">
+              <div className="d-flex overflow-auto" style={{ whiteSpace: 'nowrap' }}>
+                {history.map((num, index) => {
+                  const isWinning = num === history[history.length - 1].winningNumber;
+
+                  return (
+                    <div
+                      key={index}
+                      className="text-center fw-bold me-2 rounded"
+                      style={{
+                        minWidth: '45px',
+                        height: '45px',
+                        lineHeight: '45px',
+                        backgroundColor: num.winningNumber ? '#ffc107' : '#6c757d',
+                        color: isWinning ? '#000' : '#fff',
+                        fontSize: '16px',
+                        flexShrink: 0
+                      }}>
+                      {num.winningNumber || '-'}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">

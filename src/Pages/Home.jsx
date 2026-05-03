@@ -301,9 +301,7 @@ const Home = () => {
                         color: isWinning ? '#000' : '#fff',
                         fontSize: '16px',
                         flexShrink: 0
-                      }}>
-                      {num.winningNumber || '-'}
-                    </div>
+                      }}></div>
                   );
                 })}
               </div>

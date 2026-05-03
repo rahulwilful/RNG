@@ -282,7 +282,7 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="border border-danger border-5">
+        <div className="">
           {history.length > 0 && (
             <div className="card p-3 mb-3 shadow-sm rounded-4">
               <div className="d-flex overflow-auto" style={{ whiteSpace: 'nowrap' }}>

@@ -127,15 +127,13 @@ const History = () => {
 
               return (
                 <div key={item.id} className="border rounded p-3 mb-3 shadow-sm bg-white">
-                  <div className="d-flex justify-content-end">
-                    <i className="bi bi-x-circle text-danger" style={{ cursor: 'pointer', fontSize: '18px' }} onClick={() => handleDeleteItem(item.id)}></i>
-                  </div>
+                  <div className="d-flex justify-content-end"></div>
                   {/* COUNTS */}
                   <div className="d-flex justify-content-center border-bottom pb-2 mb-2 gap-2">
                     <button className="btn btn-sm btn-success">↑ {item.count1}</button>
                     <button className="btn btn-sm btn-success">↓ {item.count2}</button>
-                    <button className="btn btn-sm btn-danger">↑ {item.count3}</button>
-                    <button className="btn btn-sm btn-danger">↓ {item.count4}</button>
+
+                    <i className="bi bi-x-circle text-danger" style={{ cursor: 'pointer', fontSize: '18px' }} onClick={() => handleDeleteItem(item.id)}></i>
                   </div>
 
                   {/* SORTED */}

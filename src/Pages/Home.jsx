@@ -282,32 +282,34 @@ const Home = () => {
           </Link>
         </div>
 
-        <div className="">
-          {history.length > 0 && (
-            <div className="card p-2 mb-1 shadow-sm rounded-4">
-              <div className="d-flex overflow-auto" style={{ whiteSpace: 'nowrap' }}>
-                {history.map((num, index) => {
-                  const isWinning = num === history[history.length - 1].winningNumber;
+        <Link to="/win-history">
+          <div className="">
+            {history.length > 0 && (
+              <div className="card p-2 mb-1 shadow-sm rounded-4">
+                <div className="d-flex overflow-auto" style={{ whiteSpace: 'nowrap' }}>
+                  {history.map((num, index) => {
+                    const isWinning = num === history[history.length - 1].winningNumber;
 
-                  return (
-                    <div
-                      key={index}
-                      className="text-center fw-bold me-2 rounded"
-                      style={{
-                        minWidth: '20px',
-                        height: '20px',
-                        lineHeight: '20px',
-                        backgroundColor: num.winningNumber ? '#ffc107' : '#6c757d',
-                        color: isWinning ? '#000' : '#fff',
-                        fontSize: '16px',
-                        flexShrink: 0
-                      }}></div>
-                  );
-                })}
+                    return (
+                      <div
+                        key={index}
+                        className="text-center fw-bold me-2 rounded"
+                        style={{
+                          minWidth: '20px',
+                          height: '20px',
+                          lineHeight: '20px',
+                          backgroundColor: num.winningNumber == 0 ? '#ffc107' : num.winningNumber ? '#ffc107' : '#6c757d',
+                          color: isWinning ? '#000' : '#fff',
+                          fontSize: '16px',
+                          flexShrink: 0
+                        }}></div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </Link>
 
         <div className="d-flex mt-3 flex-sm-column flex-row gap-1 justify-content-center">
           {/* Sorted Numbers */}

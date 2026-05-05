@@ -85,7 +85,7 @@ const SumAndBets = () => {
               <label className="form-label fw-semibold">
                 <i className="bi bi-cash-stack me-2"></i>Sum
               </label>
-              <input type="number" name="sumAmount" value={form.sumAmount} onChange={handleChange} className="form-control form-control-lg rounded-3" placeholder="Enter total" min="0" />
+              <input type="number" name="sumAmount" value={form.sumAmount} onChange={handleChange} className="form-control form-control-lg rounded-3" placeholder="Enter total" />
             </div>
 
             {/* Bet */}

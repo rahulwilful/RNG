@@ -197,8 +197,8 @@ const Home = () => {
     await saveHistory({
       numbers,
       winningNumber,
-      count1,
-      count2,
+      count1: count1 + 1,
+      count2: count2 + 1,
       count3,
       count4,
       sumAmount: tempSumAmount || sumAmount,

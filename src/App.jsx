@@ -10,6 +10,7 @@ import Home from './Pages/Home';
 import History from './Pages/History';
 import SumAndBets from './Pages/SumAndBets';
 import WinHistory from './Pages/WinHistory';
+import DetailedWinHistory from './Pages/DetailedWinHistory';
 
 function App() {
   // store randomly generated unique numbers
@@ -21,6 +22,7 @@ function App() {
         <Route path="/history" element={<History />} />
         <Route path="/sum-and-bets" element={<SumAndBets />} />
         <Route path="/win-history" element={<WinHistory />} />
+        <Route path="/detailed-win-history" element={<DetailedWinHistory />} />
       </Routes>
     </>
   );

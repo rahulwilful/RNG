@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getHistory } from '../IndexDB/IndexDB';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const WinHistory = () => {
   const [groupedHistory, setGroupedHistory] = useState([]);
@@ -50,7 +50,7 @@ const WinHistory = () => {
         const totalResults = group.length;
 
         return (
-          <div key={gIndex} className="card p-2 mb-2 shadow-sm rounded-4">
+          <div key={gIndex} className="card p-2 mb-2 shadow-sm  rounded-4">
             {/* GROUP INFO */}
             <div className="d-flex justify-content-between small text-muted mb-1 px-1">
               <div>
@@ -66,28 +66,35 @@ const WinHistory = () => {
             </div>
 
             {/* WINNING NUMBERS */}
-            <div className="d-flex overflow-auto" style={{ whiteSpace: 'nowrap' }}>
-              {group.map(item => {
-                const latestWinning = group[0]?.winningNumber;
-                const isWinning = item.winningNumber === latestWinning;
+            <div className="d-flex gap-2">
+              <div className="d-flex  overflow-auto w-100" style={{ whiteSpace: 'nowrap' }}>
+                {group.map(item => {
+                  const latestWinning = group[0]?.winningNumber;
+                  const isWinning = item.winningNumber === latestWinning;
 
-                return (
-                  <div
-                    key={item.id}
-                    className="text-center fw-bold me-2 rounded"
-                    style={{
-                      minWidth: '20px',
-                      height: '20px',
-                      lineHeight: '20px',
-                      backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
-                      color: isWinning ? '#000' : '#fff',
-                      fontSize: '16px',
-                      flexShrink: 0
-                    }}>
-                    {item.winningNumber}
-                  </div>
-                );
-              })}
+                  return (
+                    <div
+                      key={item.id}
+                      className="text-center fw-bold me-2 rounded"
+                      style={{
+                        minWidth: '20px',
+                        height: '20px',
+                        lineHeight: '20px',
+                        backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
+                        color: isWinning ? '#000' : '#fff',
+                        fontSize: '16px',
+                        flexShrink: 0
+                      }}>
+                      {item.winningNumber}
+                    </div>
+                  );
+                })}
+              </div>
+              <div>
+                <Link to="/detailed-win-history" state={{ group }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <i className="bi bi-arrows-angle-expand"></i>
+                </Link>
+              </div>
             </div>
           </div>
         );

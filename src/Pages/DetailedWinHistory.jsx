@@ -39,23 +39,26 @@ const DetailedWinHistory = () => {
       {/* DETAILED LIST */}
       <div className="card p-3 shadow-sm rounded-4">
         <div className="d-flex flex-wrap gap-2 justify-content-center">
-          {group.map((item, index) => {
+          {group.map(item => {
             const latestWinning = group[0]?.winningNumber;
             const isWinning = item.winningNumber === latestWinning;
 
             return (
               <div
                 key={item.id}
-                className="fw-bold text-center rounded"
+                className="fw-bold text-center rounded px-3 py-2"
                 style={{
-                  width: '200px',
-                  height: '200px',
-                  lineHeight: '40px',
-                  backgroundColor: item.winningNumber == 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d', // 🟡 yellow / ⚫ grey
+                  minWidth: '60px', // 👈 minimum size
+                  backgroundColor: item.winningNumber == 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
                   color: isWinning ? '#000' : '#fff',
-                  fontSize: '16px'
+                  fontSize: '14px'
                 }}>
-                {item.winningNumber}
+                {/* NUMBER */}
+                <div style={{ fontSize: '18px' }}>{item.winningNumber}</div>
+
+                {/* COUNTS */}
+                <div className="small">C1: {item.count1 ?? 0}</div>
+                <div className="small">C2: {item.count2 ?? 0}</div>
               </div>
             );
           })}

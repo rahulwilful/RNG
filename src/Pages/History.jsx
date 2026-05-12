@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { clearHistory, getHistory, deleteHistoryItem } from '../IndexDB/IndexDB';
+import { clearHistory, getHistory, deleteHistoryItem, saveHistoryItem } from '../IndexDB/IndexDB';
 import { RouletteNumbersSorted } from '../constants/RouletteNumbers';
 import { useNavigate } from 'react-router-dom';
 import DeleteModal from '../components/DeleteModal';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -19,7 +21,11 @@ const History = () => {
 
   const loadHistory = async () => {
     const data = await getHistory();
-    setHistory(data || []);
+
+    // ✅ latest first
+    const sorted = data.sort((a, b) => b.createdAt - a.createdAt);
+
+    setHistory(sorted);
   };
 
   const handleClearHistory = async () => {
@@ -64,6 +70,111 @@ const History = () => {
     loadHistory();
   };
 
+  const handleDownloadXl = () => {
+    if (!history.length) {
+      alert('No data to export');
+      return;
+    }
+
+    // Prepare data
+    const formattedData = history.map(item => ({
+      Date: new Date(item.createdAt).toLocaleString(),
+      WinningNumber: item.winningNumber,
+      Numbers: item.numbers.join(', '),
+
+      Sum: item.sumAmount ?? 0,
+      Bet: item.betAmount ?? 0,
+      Win: item.winAmount ?? '',
+
+      SideBet: item.sideBetAmount ?? 0,
+      SideWin: item.sideWinAmount ?? 0,
+      count1: item.count1 ?? 0,
+      count2: item.count2 ?? 0,
+      count3: item.count3 ?? 0,
+      count4: item.count4 ?? 0
+    }));
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'History');
+
+    // Generate Excel file
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array'
+    });
+
+    const file = new Blob([excelBuffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    });
+
+    saveAs(file, `Roulette_History_${Date.now()}.xlsx`);
+  };
+
+  const uploadXl = e => {
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = async evt => {
+      try {
+        const data = new Uint8Array(evt.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+
+        if (!jsonData.length) {
+          alert('Excel is empty');
+          return;
+        }
+
+        // Convert Excel → DB format
+        const formatted = jsonData.map((row, index) => ({
+          id: Date.now() + index, // unique id
+
+          createdAt: row.Date ? new Date(row.Date).getTime() : Date.now(),
+
+          winningNumber: Number(row.WinningNumber) || '',
+
+          numbers: row.Numbers ? row.Numbers.split(',').map(n => Number(n.trim())) : [],
+
+          sumAmount: Number(row.Sum) || 0,
+          betAmount: Number(row.Bet) || 0,
+          winAmount: Number(row.Win) || 0,
+
+          sideBetAmount: Number(row.SideBet) || 0,
+          sideWinAmount: Number(row.SideWin) || 0,
+
+          count1: Number(row.count1) || 0,
+          count2: Number(row.count2) || 0,
+          count3: Number(row.count3) || 0,
+          count4: Number(row.count4) || 0
+        }));
+
+        // Save all records
+        for (const item of formatted) {
+          await saveHistoryItem(item);
+        }
+
+        alert('Upload successful ✅');
+        loadHistory();
+      } catch (err) {
+        console.error(err);
+        alert('Error reading Excel file');
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <>
       <DeleteModal show={showModal} closeModal={() => setShowModal(false)} handleClearHistory={handleClearHistory} message={'Confirm Delete History'} />
@@ -74,8 +185,12 @@ const History = () => {
           <i className="bi bi-arrow-left fw-bold fs-4" onClick={() => navigate(-1)} style={{ cursor: 'pointer' }}></i>
 
           <h3 className="text-center flex-grow-1 mb-0">History</h3>
-
-          <i className="bi bi-trash fs-3" onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}></i>
+          <div className="d-flex gap-3 align-items-center">
+            <i className="bi bi-cloud-upload fs-3" style={{ cursor: 'pointer' }} onClick={() => document.getElementById('uploadExcel').click()} />
+            <input type="file" accept=".xlsx, .xls" id="uploadExcel" style={{ display: 'none' }} onChange={uploadXl} />
+            <i className="bi bi-cloud-download  fs-3 " onClick={handleDownloadXl} style={{ cursor: 'pointer' }}></i>
+            <i className="bi bi-trash fs-3" onClick={() => setShowModal(true)} style={{ cursor: 'pointer' }}></i>
+          </div>
         </div>
 
         {/* TOTAL SUMMARY */}

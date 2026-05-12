@@ -12,8 +12,9 @@ const WinHistory = () => {
 
   const loadHistory = async () => {
     const data = await getHistory();
+    const sorted = data.sort((a, b) => b.createdAt - a.createdAt);
 
-    const groups = groupByTimeGap(data || []);
+    const groups = groupByTimeGap(sorted || []);
     setGroupedHistory(groups);
   };
 

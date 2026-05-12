@@ -49,7 +49,7 @@ const DetailedWinHistory = () => {
                 className="fw-bold text-center rounded px-3 py-2"
                 style={{
                   minWidth: '60px', // 👈 minimum size
-                  backgroundColor: item.winningNumber == 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
+                  backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
                   color: isWinning ? '#fff' : '#fff',
                   fontSize: '14px'
                 }}>

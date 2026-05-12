@@ -4,6 +4,7 @@ import Modal from 'react-bootstrap/Modal';
 const DeleteModal = ({ show, message, onHide, handleClearHistory, closeModal }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [pass, setPass] = React.useState('');
   const jokerValueRef = useRef(null);
 
   useEffect(() => {
@@ -22,6 +23,15 @@ const DeleteModal = ({ show, message, onHide, handleClearHistory, closeModal }) 
     closeModal();
   };
 
+  const handleCheckPassword = () => {
+    if (pass === '976758') {
+      handleClearHistory();
+    } else {
+      closeModal();
+      setPass('');
+    }
+  };
+
   return (
     <Modal size="lg" centered show={show} onHide={handleClose} contentClassName=" ">
       <Modal.Body
@@ -35,8 +45,10 @@ const DeleteModal = ({ show, message, onHide, handleClearHistory, closeModal }) 
         }}>
         <div className="h-100  d-flex flex-column justify-content-center align-items-center gap-4 d-flex">
           <h4 className="fw-bold text-dark">{message}</h4>
+          <input type="password" class="form-control" id="exampleFormControlInput1" placeholder="Enter Password" onChange={e => setPass(e.target.value)} />
+
           <div className="d-flex gap-2">
-            <button className={`btn btn-sm d-flex btn-danger   mb-3`} onClick={handleClearHistory}>
+            <button className={`btn btn-sm d-flex btn-danger   mb-3`} onClick={handleCheckPassword}>
               Clear
             </button>
 

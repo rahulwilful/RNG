@@ -124,6 +124,20 @@ export const saveHistory = async ({ numbers, winningNumber, count1, count2, coun
   });
 };
 
+export const saveHistoryItem = async item => {
+  const db = await openDB();
+
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('history', 'readwrite');
+    const store = tx.objectStore('history');
+
+    store.put(item);
+
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => reject(tx.error);
+  });
+};
+
 export const getHistory = async () => {
   const db = await openDB();
 

@@ -57,8 +57,11 @@ const Home = () => {
 
   const loadHistory = async () => {
     const data = await getHistory();
-    console.log('history', data);
-    setHistory(data || []);
+
+    // ✅ latest first
+    const sorted = data.sort((a, b) => b.createdAt - a.createdAt);
+
+    setHistory(sorted || []);
   };
 
   const getAllAmounts = async () => {
@@ -193,12 +196,12 @@ const Home = () => {
     setShowModal(false);
   };
 
-  const saveHistoryEntry = async tempSumAmount => {
+  const saveHistoryEntry = async (tempSumAmount, count1Increment, count2Increment) => {
     await saveHistory({
       numbers,
       winningNumber,
-      count1: count1 + 1,
-      count2: count2 + 1,
+      count1: count1 + count1Increment,
+      count2: count2 + count2Increment,
       count3,
       count4,
       sumAmount: tempSumAmount || sumAmount,
@@ -220,7 +223,7 @@ const Home = () => {
     await updateAmounts(payload);
 
     await getAllAmounts();
-    await saveHistoryEntry(tempSumAmount);
+    await saveHistoryEntry(tempSumAmount, 1, 0);
     loadHistory();
   };
 
@@ -237,7 +240,7 @@ const Home = () => {
     await updateAmounts(payload);
 
     await getAllAmounts();
-    await saveHistoryEntry(tempSumAmount);
+    await saveHistoryEntry(tempSumAmount, 0, 1);
     loadHistory();
   };
 
@@ -274,9 +277,6 @@ const Home = () => {
             Generate ({totalGenerated})
           </button>
 
-          <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3" onClick={saveHistoryEntry}>
-            <i className="bi bi-floppy2"></i>
-          </button>
           <Link to="/history">
             <button className="btn btn-sm btn-primary fs-7 text-nowrap mb-3">History</button>
           </Link>
@@ -298,7 +298,7 @@ const Home = () => {
                           minWidth: '20px',
                           height: '20px',
                           lineHeight: '20px',
-                          backgroundColor: num.winningNumber == 0 ? '#ffc107' : num.winningNumber ? '#ffc107' : '#6c757d',
+                          backgroundColor: num.winningNumber === 0 ? '#ffc107' : num.winningNumber ? '#ffc107' : '#6c757d',
                           color: isWinning ? '#000' : '#fff',
                           fontSize: '16px',
                           flexShrink: 0

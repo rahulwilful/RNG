@@ -250,54 +250,6 @@ const History = () => {
 
                     <i className="bi bi-x-circle text-danger" style={{ cursor: 'pointer', fontSize: '18px' }} onClick={() => handleDeleteItem(item.id)}></i>
                   </div>
-
-                  {/* SORTED */}
-                  <h6 className="text-center">Sorted</h6>
-                  <div className="row justify-content-center mb-2">
-                    {[...item.numbers]
-                      .sort((a, b) => a - b)
-                      .map((num, i) => {
-                        const color = getColor(num);
-                        const isWinning = num === item.winningNumber;
-
-                        return (
-                          <div
-                            key={i}
-                            className="col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded"
-                            style={{
-                              backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                              padding: '8px',
-                              color: isWinning ? '#000' : '#fff'
-                            }}>
-                            {num}
-                          </div>
-                        );
-                      })}
-                  </div>
-
-                  {/* ORIGINAL */}
-                  <h6 className="text-center">Original</h6>
-                  <div className="row justify-content-center mb-2">
-                    {item.numbers.map((num, i) => {
-                      const color = getColor(num);
-                      const isWinning = num === item.winningNumber;
-
-                      return (
-                        <div
-                          key={i}
-                          className="col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded"
-                          style={{
-                            backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
-                            padding: '8px',
-                            color: isWinning ? '#000' : '#fff'
-                          }}>
-                          {num}
-                        </div>
-                      );
-                    })}
-                  </div>
-
-                  {/* AMOUNTS */}
                   <div className="row text-center mt-2 g-2">
                     <div className="col-4">
                       <div className="p-2 bg-light rounded shadow-sm">
@@ -320,12 +272,59 @@ const History = () => {
                       </div>
                     </div>
                   </div>
+                  <div className="d-flex mt-3 flex-sm-column flex-row gap-4 justify-content-center">
+                    {/* SORTED */}
+                    <div>
+                      <h6 className="text-center">Sorted</h6>
+                      <div className="row justify-content-center mb-2">
+                        {[...item.numbers]
+                          .sort((a, b) => a - b)
+                          .map((num, i) => {
+                            const color = getColor(num);
+                            const isWinning = num === item.winningNumber;
 
-                  {/* PROFIT */}
-                  <div className="text-center mt-2">
-                    <small className="text-muted">Profit / Loss</small>
-                    <div className={`fw-bold ${profit >= 0 ? 'text-success' : 'text-danger'}`}>₹ {profit}</div>
+                            return (
+                              <div
+                                key={i}
+                                className="col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded"
+                                style={{
+                                  backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                                  padding: '8px',
+                                  color: isWinning ? '#000' : '#fff'
+                                }}>
+                                {num}
+                              </div>
+                            );
+                          })}
+                      </div>
+                    </div>
+
+                    {/* ORIGINAL */}
+                    <div>
+                      <h6 className="text-center">Original</h6>
+                      <div className="row justify-content-center mb-2">
+                        {item.numbers.map((num, i) => {
+                          const color = getColor(num);
+                          const isWinning = num === item.winningNumber;
+
+                          return (
+                            <div
+                              key={i}
+                              className="col-3 col-sm-2 col-md-1 m-1 text-center fw-bold rounded"
+                              style={{
+                                backgroundColor: isWinning ? '#ffc107' : getBgColor(color),
+                                padding: '8px',
+                                color: isWinning ? '#000' : '#fff'
+                              }}>
+                              {num}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
+
+                  {/* AMOUNTS */}
 
                   {/* TIMESTAMP */}
                   <div className="text-center mt-2 small text-muted">{new Date(item.createdAt).toLocaleString()}</div>

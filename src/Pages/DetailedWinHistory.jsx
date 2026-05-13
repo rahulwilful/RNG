@@ -16,6 +16,8 @@ const DetailedWinHistory = () => {
   const [s9, setS9] = React.useState(0);
   const [s10, setS10] = React.useState(0);
 
+  const [totalItemsOf2s, setTotalItemsOf2s] = React.useState(0);
+
   if (!group.length) {
     return <div className="text-center mt-5">No Data Found</div>;
   }
@@ -73,8 +75,47 @@ const DetailedWinHistory = () => {
     setS4(count);
   };
 
+  const claculateItemsOf2s = () => {
+    let totalItems = 0;
+    let count = 0;
+    let count2 = 0;
+
+    for (let i = 0; i < group.length; i++) {
+      if (group[i]?.winningNumber && group[i + 1]?.winningNumber) {
+        if (count == 0) {
+          count = 2;
+
+          continue;
+        } else {
+          count2++;
+
+          continue;
+        }
+      }
+
+      if (!group[i]?.winningNumber && !group[i + 1]?.winningNumber) {
+        if (count == 0) {
+          count = 2;
+
+          continue;
+        } else {
+          count2++;
+
+          continue;
+        }
+      }
+
+      totalItems = totalItems + count + count2;
+
+      count = 0;
+      count2 = 0;
+    }
+    setTotalItemsOf2s(totalItems);
+  };
+
   useEffect(() => {
     calculate2s();
+    claculateItemsOf2s();
   }, [group]);
 
   return (
@@ -102,7 +143,9 @@ const DetailedWinHistory = () => {
           <div className="fw-bold mb-2">Series (Overlapping)</div>
 
           <div className="d-flex flex-wrap justify-content-center gap-2">
-            <span className="badge bg-dark">2S: {s2}</span>
+            <span className="badge bg-dark">
+              2S: {s2} / {totalItemsOf2s}
+            </span>
             <span className="badge bg-dark">3S: {s3}</span>
             <span className="badge bg-dark">4S: {s4}</span>
             {/* <span className="badge bg-dark">5S: {s5}</span>

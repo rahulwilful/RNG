@@ -15,6 +15,18 @@ const History = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
+  const [s2, setS2] = React.useState(0);
+  const [s3, setS3] = React.useState(0);
+  const [s4, setS4] = React.useState(0);
+  const [s5, setS5] = React.useState(0);
+  const [s6, setS6] = React.useState(0);
+  const [s7, setS7] = React.useState(0);
+  const [s8, setS8] = React.useState(0);
+  const [s9, setS9] = React.useState(0);
+  const [s10, setS10] = React.useState(0);
+
+  const [totalItemsOf2s, setTotalItemsOf2s] = React.useState(0);
+
   useEffect(() => {
     loadHistory();
   }, []);
@@ -175,6 +187,99 @@ const History = () => {
     reader.readAsArrayBuffer(file);
   };
 
+  const calculate2s = () => {
+    let count = 0;
+
+    for (let i = 0; i < history.length; i++) {
+      if (history[i]?.winningNumber && history[i + 1]?.winningNumber) {
+        count++;
+      }
+
+      if (!history[i]?.winningNumber && !history[i + 1]?.winningNumber) {
+        count++;
+      }
+    }
+
+    setS2(count);
+    calculate3s();
+  };
+
+  const calculate3s = () => {
+    let count = 0;
+
+    for (let i = 0; i < history.length; i++) {
+      if (history[i]?.winningNumber && history[i + 1]?.winningNumber && history[i + 2]?.winningNumber) {
+        count++;
+      }
+
+      if (!history[i]?.winningNumber && !history[i + 1]?.winningNumber && !history[i + 2]?.winningNumber) {
+        count++;
+      }
+    }
+
+    setS3(count);
+    calculate4s();
+  };
+
+  const calculate4s = () => {
+    let count = 0;
+
+    for (let i = 0; i < history.length; i++) {
+      if (history[i]?.winningNumber && history[i + 1]?.winningNumber && history[i + 2]?.winningNumber && history[i + 3]?.winningNumber) {
+        count++;
+      }
+
+      if (!history[i]?.winningNumber && !history[i + 1]?.winningNumber && !history[i + 2]?.winningNumber && !history[i + 3]?.winningNumber) {
+        count++;
+      }
+    }
+
+    setS4(count);
+  };
+
+  const claculateItemsOf2s = () => {
+    let totalItems = 0;
+    let count = 0;
+    let count2 = 0;
+
+    for (let i = 0; i < history.length; i++) {
+      if (history[i]?.winningNumber && history[i + 1]?.winningNumber) {
+        if (count == 0) {
+          count = 2;
+
+          continue;
+        } else {
+          count2++;
+
+          continue;
+        }
+      }
+
+      if (!history[i]?.winningNumber && !history[i + 1]?.winningNumber) {
+        if (count == 0) {
+          count = 2;
+
+          continue;
+        } else {
+          count2++;
+
+          continue;
+        }
+      }
+
+      totalItems = totalItems + count + count2;
+
+      count = 0;
+      count2 = 0;
+    }
+    setTotalItemsOf2s(totalItems);
+  };
+
+  useEffect(() => {
+    calculate2s();
+    claculateItemsOf2s();
+  }, [history]);
+
   return (
     <>
       <DeleteModal show={showModal} closeModal={() => setShowModal(false)} handleClearHistory={handleClearHistory} message={'Confirm Delete History'} />
@@ -213,6 +318,20 @@ const History = () => {
                 <small>Profit</small>
                 <div className={`fw-bold ${totals.win - totals.bet >= 0 ? 'text-success' : 'text-danger'}`}>₹ {totals.win - totals.bet}</div>
               </div>
+            </div>
+            <div className="d-flex flex-wrap justify-content-center gap-2">
+              <span className="badge bg-dark">
+                2S: {s2} / {totalItemsOf2s}
+              </span>
+              <span className="badge bg-dark">3S: {s3}</span>
+              <span className="badge bg-dark">4S: {s4}</span>
+              <span className="badge bg-dark">Total: {history.length}</span>
+              {/* <span className="badge bg-dark">5S: {s5}</span>
+            <span className="badge bg-dark">6S: {s6}</span>
+            <span className="badge bg-dark">7S: {s7}</span>
+            <span className="badge bg-dark">8S: {s8}</span>
+            <span className="badge bg-dark">9S: {s9}</span>
+            <span className="badge bg-dark">10S: {s10}</span> */}
             </div>
           </div>
         )}

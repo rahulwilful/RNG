@@ -31,7 +31,7 @@ const DetailedWinHistory = () => {
         count++;
       }
 
-      if (!group[i].winningNumber && !group[i + 1].winningNumber) {
+      if (!group[i]?.winningNumber && !group[i + 1]?.winningNumber) {
         count++;
       }
     }
@@ -48,7 +48,7 @@ const DetailedWinHistory = () => {
         count++;
       }
 
-      if (!group[i].winningNumber && !group[i + 1].winningNumber && !group[i + 2].winningNumber) {
+      if (!group[i]?.winningNumber && !group[i + 1]?.winningNumber && !group[i + 2]?.winningNumber) {
         count++;
       }
     }
@@ -65,7 +65,7 @@ const DetailedWinHistory = () => {
         count++;
       }
 
-      if (!group[i].winningNumber && !group[i + 1].winningNumber && !group[i + 2].winningNumber && !group[i + 3].winningNumber) {
+      if (!group[i]?.winningNumber && !group[i + 1]?.winningNumber && !group[i + 2]?.winningNumber && !group[i + 3]?.winningNumber) {
         count++;
       }
     }

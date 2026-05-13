@@ -40,7 +40,7 @@ const Home = () => {
   useEffect(() => {
     const loadCounts = async () => {
       const data = await getCounts();
-      console.log(data);
+      //console.log(data);
 
       if (data) {
         setCount1(data.count1 || 0);
@@ -65,9 +65,9 @@ const Home = () => {
   };
 
   const getAllAmounts = async () => {
-    console.log('getAmounts called');
+    //console.log('getAmounts called');
     const data = await getAmounts();
-    console.log('getAmounts -> data', data);
+    //console.log('getAmounts -> data', data);
     if (data) {
       setSumAmount(data.sumAmount || 0);
       setBetAmount(data.betAmount || 0);
@@ -101,7 +101,7 @@ const Home = () => {
   };
 
   const handleClearCounts = async () => {
-    console.log('handleClearCounts called');
+    //console.log('handleClearCounts called');
     await clearCounts();
 
     setCount1(0);
@@ -115,7 +115,7 @@ const Home = () => {
   const generateRandomNumber = i => {
     const random = new Random();
     const number = random.integer(0, 36);
-    // console.log('generateRandomNumber -> number ' + i + ' -> ', number);
+    // //console.log('generateRandomNumber -> number ' + i + ' -> ', number);
     return number;
   };
 
@@ -157,7 +157,7 @@ const Home = () => {
   const getCurrentGeneratedNumbers = async () => {
     const result = await getCurrentNumbers();
     if (result.length > 0) {
-      console.log('saved Result: ', result);
+      //console.log('saved Result: ', result);
       setNumbers(result);
       const sorted = [...result].sort((a, b) => a - b);
       setSortedNumbers(sorted);

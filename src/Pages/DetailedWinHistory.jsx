@@ -140,11 +140,11 @@ const DetailedWinHistory = () => {
           <strong>Total Results:</strong> {group.length}
         </div>
         <div className="card p-3 mb-3 shadow-sm rounded-4 text-center">
-          <div className="fw-bold mb-2">Series (Overlapping)</div>
+          <div className="fw-bold mb-2">Series</div>
 
           <div className="d-flex flex-wrap justify-content-center gap-2">
             <span className="badge bg-dark">
-              2S: {s2} / {totalItemsOf2s}
+              2S: {s2}/{totalItemsOf2s} ({(((totalItemsOf2s - s2) / s2) * 100).toFixed(2)} )
             </span>
             <span className="badge bg-dark">3S: {s3}</span>
             <span className="badge bg-dark">4S: {s4}</span>

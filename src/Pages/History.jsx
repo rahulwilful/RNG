@@ -148,11 +148,29 @@ const History = () => {
           return;
         }
 
+        // console.log('jsonData ', jsonData);
+
         // Convert Excel → DB format
         const formatted = jsonData.map((row, index) => ({
           id: Date.now() + index, // unique id
 
-          createdAt: row.Date ? new Date(row.Date).getTime() : Date.now(),
+          createdAt: row.Date
+            ? (() => {
+                const [datePart, timePart] = row.Date.split(',');
+
+                const [day, month, year] = datePart.trim().split('/');
+                const [hours, minutes, seconds] = timePart.trim().split(':');
+
+                return new Date(
+                  year,
+                  month - 1, // JS months are 0-based
+                  day,
+                  hours,
+                  minutes,
+                  seconds
+                ).getTime();
+              })()
+            : Date.now(),
 
           winningNumber: Number(row.WinningNumber) || '',
 
@@ -170,6 +188,8 @@ const History = () => {
           count3: Number(row.count3) || 0,
           count4: Number(row.count4) || 0
         }));
+
+        // console.log('formatted ', formatted);
 
         // Save all records
         for (const item of formatted) {

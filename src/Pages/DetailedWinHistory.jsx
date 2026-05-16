@@ -234,7 +234,7 @@ const DetailedWinHistory = () => {
       {/* DETAILED LIST */}
       <div className="card p-3 shadow-sm rounded-4">
         <div className="d-flex  flex-wrap  justify-content-center">
-          {data.map(item => {
+          {data.map((item, i) => {
             const latestWinning = group[0]?.winningNumber;
             const isWinning = item.winningNumber === latestWinning;
 
@@ -261,6 +261,13 @@ const DetailedWinHistory = () => {
                   {/* COUNTS */}
                   <div className="small">C1: {item.count1 ?? 0}</div>
                   <div className="small">C2: {item.count2 ?? 0}</div>
+                </div>
+                <div
+                  style={{
+                    fontSize: '10px',
+                    textAlign: 'center'
+                  }}>
+                  {data.length - i}
                 </div>
               </div>
             );

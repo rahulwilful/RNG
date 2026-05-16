@@ -246,9 +246,9 @@ const DetailedWinHistory = () => {
                   minWidth: '65px',
                   backgroundColor: item.background || '#f8f9fa' // Use the background from state or default
                 }}
-                className={` px-1 py-1 border`}>
+                className={` px-1 py-1 d-flex flex-column align-items-center justify-content-center border`}>
                 <div
-                  className={`result-box h-100  fw-bold text-center d-flex flex-column align-items-center justify-content-center  rounded px-1 py-1 ${item.winningNumber === 0 ? '' : item.winningNumber ? '' : 'rounded-pill'}`}
+                  className={`result-box   fw-bold text-center   rounded  ${item.winningNumber === 0 ? 'px-1 py-1' : item.winningNumber ? 'px-1 py-1' : 'rounded-pill px-2 py-3'}`}
                   style={{
                     // 👈 minimum size
                     backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',

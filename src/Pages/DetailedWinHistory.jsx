@@ -232,8 +232,8 @@ const DetailedWinHistory = () => {
       </div>
 
       {/* DETAILED LIST */}
-      <div className="card p-3 shadow-sm rounded-4">
-        <div className="d-flex  flex-wrap  justify-content-center">
+      <div className="  py-3 shadow-sm rounded-4">
+        <div className="d-flex  flex-wrap  justify-content-evenly ">
           {data.map((item, i) => {
             const latestWinning = group[0]?.winningNumber;
             const isWinning = item.winningNumber === latestWinning;
@@ -243,7 +243,7 @@ const DetailedWinHistory = () => {
                 key={item.id}
                 data-id={item.id} // Add this for DOM selection
                 style={{
-                  minWidth: '70px',
+                  minWidth: '68px',
                   backgroundColor: item.background || '#f8f9fa' // Use the background from state or default
                 }}
                 className={` px-1 py-1 border`}>

@@ -248,7 +248,7 @@ const DetailedWinHistory = () => {
                 }}
                 className={` px-1 py-1 d-flex flex-column align-items-center justify-content-center border`}>
                 <div
-                  className={`result-box   fw-bold text-center   rounded  ${item.winningNumber === 0 ? 'px-1 py-1' : item.winningNumber ? 'px-1 py-1' : 'rounded-pill px-2 py-3'}`}
+                  className={`result-box   fw-bold text-center   rounded  ${item.winningNumber === 0 ? 'px-1 py-1' : item.winningNumber ? 'px-1 py-1' : 'rounded-pill px-2 py-2'}`}
                   style={{
                     // 👈 minimum size
                     backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',

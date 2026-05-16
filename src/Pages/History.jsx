@@ -15,17 +15,19 @@ const History = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
 
-  const [s2, setS2] = React.useState(0);
-  const [s3, setS3] = React.useState(0);
-  const [s4, setS4] = React.useState(0);
-  const [s5, setS5] = React.useState(0);
-  const [s6, setS6] = React.useState(0);
-  const [s7, setS7] = React.useState(0);
-  const [s8, setS8] = React.useState(0);
-  const [s9, setS9] = React.useState(0);
-  const [s10, setS10] = React.useState(0);
+  const [s2, setS2] = useState(0);
+  const [s3, setS3] = useState(0);
+  const [s4, setS4] = useState(0);
+  const [s5, setS5] = useState(0);
+  const [s6, setS6] = useState(0);
+  const [s7, setS7] = useState(0);
+  const [s8, setS8] = useState(0);
+  const [s9, setS9] = useState(0);
+  const [s10, setS10] = useState(0);
 
-  const [totalItemsOf2s, setTotalItemsOf2s] = React.useState(0);
+  const [totalItemsOf2s, setTotalItemsOf2s] = useState(0);
+
+  const [totalWin, setTotalWin] = useState(0);
 
   useEffect(() => {
     loadHistory();
@@ -265,8 +267,12 @@ const History = () => {
     let totalItems = 0;
     let count = 0;
     let count2 = 0;
-
+    let tempTotalWin = 0;
     for (let i = 0; i < history.length; i++) {
+      if (history[i]?.winningNumber != '') {
+        tempTotalWin++;
+      }
+
       if (history[i]?.winningNumber && history[i + 1]?.winningNumber) {
         if (count == 0) {
           count = 2;
@@ -296,6 +302,7 @@ const History = () => {
       count = 0;
       count2 = 0;
     }
+    setTotalWin(tempTotalWin);
     setTotalItemsOf2s(totalItems);
   };
 
@@ -345,11 +352,14 @@ const History = () => {
             </div>
             <div className="d-flex flex-wrap justify-content-center gap-2">
               <span className="badge bg-dark">
-                2S: {s2} / {totalItemsOf2s}
+                2S: {s2} / {totalItemsOf2s} ({(((totalItemsOf2s - s2) / s2) * 100).toFixed(2)} )% / ({((totalItemsOf2s / history.length) * 100).toFixed(2)} )%
               </span>
               <span className="badge bg-dark">3S: {s3}</span>
               <span className="badge bg-dark">4S: {s4}</span>
               <span className="badge bg-dark">Total: {history.length}</span>
+              <span className="badge bg-dark">
+                Win/Loose: {totalWin} / {history.length - totalWin}
+              </span>
               {/* <span className="badge bg-dark">5S: {s5}</span>
             <span className="badge bg-dark">6S: {s6}</span>
             <span className="badge bg-dark">7S: {s7}</span>

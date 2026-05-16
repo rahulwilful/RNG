@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const DetailedWinHistory = () => {
@@ -6,17 +6,18 @@ const DetailedWinHistory = () => {
   const navigate = useNavigate();
   const group = location.state?.group || [];
 
-  const [s2, setS2] = React.useState(0);
-  const [s3, setS3] = React.useState(0);
-  const [s4, setS4] = React.useState(0);
-  const [s5, setS5] = React.useState(0);
-  const [s6, setS6] = React.useState(0);
-  const [s7, setS7] = React.useState(0);
-  const [s8, setS8] = React.useState(0);
-  const [s9, setS9] = React.useState(0);
-  const [s10, setS10] = React.useState(0);
+  const [s2, setS2] = useState(0);
+  const [s3, setS3] = useState(0);
+  const [s4, setS4] = useState(0);
+  const [s5, setS5] = useState(0);
+  const [s6, setS6] = useState(0);
+  const [s7, setS7] = useState(0);
+  const [s8, setS8] = useState(0);
+  const [s9, setS9] = useState(0);
+  const [s10, setS10] = useState(0);
 
-  const [totalItemsOf2s, setTotalItemsOf2s] = React.useState(0);
+  const [totalItemsOf2s, setTotalItemsOf2s] = useState(0);
+  const [totalWin, setTotalWin] = useState(0);
 
   if (!group.length) {
     return <div className="text-center mt-5">No Data Found</div>;
@@ -79,8 +80,13 @@ const DetailedWinHistory = () => {
     let totalItems = 0;
     let count = 0;
     let count2 = 0;
+    let tempTotalWin = 0;
 
     for (let i = 0; i < group.length; i++) {
+      if (group[i]?.winningNumber != '') {
+        tempTotalWin++;
+      }
+
       if (group[i]?.winningNumber && group[i + 1]?.winningNumber) {
         if (count == 0) {
           count = 2;
@@ -111,6 +117,7 @@ const DetailedWinHistory = () => {
       count2 = 0;
     }
     setTotalItemsOf2s(totalItems);
+    setTotalWin(tempTotalWin);
   };
 
   useEffect(() => {
@@ -144,10 +151,14 @@ const DetailedWinHistory = () => {
 
           <div className="d-flex flex-wrap justify-content-center gap-2">
             <span className="badge bg-dark">
-              2S: {s2}/{totalItemsOf2s} ({(((totalItemsOf2s - s2) / s2) * 100).toFixed(2)} )
+              2S: {s2}/{totalItemsOf2s} ({(((totalItemsOf2s - s2) / s2) * 100).toFixed(2)} ) ({((totalItemsOf2s / group.length) * 100).toFixed(2)} )
             </span>
             <span className="badge bg-dark">3S: {s3}</span>
             <span className="badge bg-dark">4S: {s4}</span>
+            <span className="badge bg-dark">
+              Win/Loose: {totalWin} / {group.length - totalWin}
+            </span>
+
             {/* <span className="badge bg-dark">5S: {s5}</span>
             <span className="badge bg-dark">6S: {s6}</span>
             <span className="badge bg-dark">7S: {s7}</span>
@@ -160,7 +171,7 @@ const DetailedWinHistory = () => {
 
       {/* DETAILED LIST */}
       <div className="card p-3 shadow-sm rounded-4">
-        <div className="d-flex flex-wrap gap-2 justify-content-center">
+        <div className="d-flex row flex-wrap gap-2 justify-content-center">
           {group.map(item => {
             const latestWinning = group[0]?.winningNumber;
             const isWinning = item.winningNumber === latestWinning;
@@ -170,7 +181,7 @@ const DetailedWinHistory = () => {
                 key={item.id}
                 className="fw-bold text-center rounded px-3 py-2"
                 style={{
-                  minWidth: '60px', // 👈 minimum size
+                  width: '70px', // 👈 minimum size
                   backgroundColor: item.winningNumber === 0 ? '#ffc107' : item.winningNumber ? '#ffc107' : '#6c757d',
                   color: isWinning ? '#fff' : '#fff',
                   fontSize: '14px'

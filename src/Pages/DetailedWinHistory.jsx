@@ -243,7 +243,7 @@ const DetailedWinHistory = () => {
                 key={item.id}
                 data-id={item.id} // Add this for DOM selection
                 style={{
-                  minWidth: '68px',
+                  minWidth: '65px',
                   backgroundColor: item.background || '#f8f9fa' // Use the background from state or default
                 }}
                 className={` px-1 py-1 border`}>

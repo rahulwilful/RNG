@@ -150,6 +150,8 @@ const History = () => {
 
         // console.log('jsonData ', jsonData);
 
+        console.log('jsonData', jsonData);
+
         // Convert Excel → DB format
         const formatted = jsonData.map((row, index) => ({
           id: Date.now() + index, // unique id
@@ -172,7 +174,7 @@ const History = () => {
               })()
             : Date.now(),
 
-          winningNumber: Number(row.WinningNumber) || '',
+          winningNumber: row.WinningNumber !== undefined && row.WinningNumber !== null ? Number(row.WinningNumber) : '',
 
           numbers: row.Numbers ? row.Numbers.split(',').map(n => Number(n.trim())) : [],
 
@@ -190,6 +192,8 @@ const History = () => {
         }));
 
         // console.log('formatted ', formatted);
+
+        console.log('formatedData', formatted);
 
         // Save all records
         for (const item of formatted) {

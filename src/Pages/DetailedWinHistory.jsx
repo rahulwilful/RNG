@@ -21,6 +21,9 @@ const DetailedWinHistory = () => {
   const [totalItemsOf2s, setTotalItemsOf2s] = useState(0);
   const [totalWin, setTotalWin] = useState(0);
 
+  const [seriesBackground, setSeriesBackground] = useState(false);
+  const [alternateBackground, setAlternateBackground] = useState(true);
+
   if (!group.length) {
     return <div className="text-center mt-5">No Data Found</div>;
   }
@@ -85,7 +88,7 @@ const DetailedWinHistory = () => {
     let tempTotalWin = 0;
 
     for (let i = 0; i < group.length; i++) {
-      if (group[i]?.winningNumber != '') {
+      if (group[i]?.winningNumber === 0 || group[i]?.winningNumber != '') {
         tempTotalWin++;
       }
 
@@ -151,7 +154,7 @@ const DetailedWinHistory = () => {
         for (let j = i; j < i + 4 && j < updatedGroup.length; j++) {
           updatedGroup[j] = {
             ...updatedGroup[j],
-            background: '#ffcccc' // Light red
+            alternateBackground: '#ffcccc' // Light red
           };
         }
       }
@@ -163,27 +166,45 @@ const DetailedWinHistory = () => {
   const highlightSeries = groupToHighlight => {
     const updatedGroup = [...groupToHighlight];
 
-    // Check for 3+ consecutive wins or losses
-    for (let i = 0; i < updatedGroup.length - 2; i++) {
-      const isWin1 = !!updatedGroup[i].winningNumber;
-      const isWin2 = !!updatedGroup[i + 1].winningNumber;
-      const isWin3 = !!updatedGroup[i + 2].winningNumber;
+    const isWin = item => {
+      return item.winningNumber !== null && item.winningNumber !== undefined && item.winningNumber !== '';
+    };
 
-      // Check if all 3 are wins or all 3 are losses
+    for (let i = 0; i < updatedGroup.length - 2; i++) {
+      const isWin1 = isWin(updatedGroup[i]);
+      const isWin2 = isWin(updatedGroup[i + 1]);
+      const isWin3 = isWin(updatedGroup[i + 2]);
+
+      // Check if all 3 are wins OR all 3 are losses
       if ((isWin1 && isWin2 && isWin3) || (!isWin1 && !isWin2 && !isWin3)) {
-        // Highlight the 3+ items in the series
+        const isWinSeries = isWin1; // All items in the series are wins or losses
+
         for (let j = i; j < updatedGroup.length; j++) {
-          const isWinJ = !!updatedGroup[j].winningNumber;
-          if ((isWinJ && isWin1) || (!isWinJ && !isWin1)) {
+          const isWinJ = isWin(updatedGroup[j]);
+          if (isWinJ === isWinSeries) {
             updatedGroup[j] = {
               ...updatedGroup[j],
-              background: '#ccccff' // Light blue
+              seriesBackground: '#d1d1ff' // Light blue
             };
           } else {
-            break; // Stop if the series breaks
+            break;
           }
         }
       }
+    }
+
+    setData(updatedGroup);
+  };
+
+  const toggleBackground = () => {
+    if (!alternateBackground) {
+      setAlternateBackground(true);
+      setSeriesBackground(false);
+      console.log('Alternate background enabled');
+    } else {
+      setAlternateBackground(false);
+      setSeriesBackground(true);
+      console.log('series background enabled');
     }
   };
 
@@ -212,7 +233,7 @@ const DetailedWinHistory = () => {
           <div className="fw-bold mb-2">Series</div>
 
           <div className="d-flex flex-wrap justify-content-center gap-2">
-            <span className="badge bg-dark">
+            <span className="badge bg-dark" onClick={toggleBackground} style={{ cursor: 'pointer' }}>
               2S: {s2}/{totalItemsOf2s} ({(((totalItemsOf2s - s2) / s2) * 100).toFixed(2)} ) ({((totalItemsOf2s / group.length) * 100).toFixed(2)} )
             </span>
             <span className="badge bg-dark">3S: {s3}</span>
@@ -244,7 +265,7 @@ const DetailedWinHistory = () => {
                 data-id={item.id} // Add this for DOM selection
                 style={{
                   minWidth: '65px',
-                  backgroundColor: item.background || '#f8f9fa' // Use the background from state or default
+                  backgroundColor: seriesBackground && item.seriesBackground ? item.seriesBackground : alternateBackground && item.alternateBackground ? item.alternateBackground : '#f8f9fa' // Use the background from state or default
                 }}
                 className={` px-1 py-1 d-flex flex-column align-items-center justify-content-center border`}>
                 <div

@@ -30,6 +30,8 @@ const DeleteModal = ({ show, message, onHide, handleClearHistory, closeModal }) 
       closeModal();
       setPass('');
     }
+
+    //handleClearHistory();
   };
 
   return (
